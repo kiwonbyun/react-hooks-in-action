@@ -1,19 +1,24 @@
-import React, { Fragment, useReducer, useState } from "react";
+import React, { Fragment, useEffect, useReducer, useState } from "react";
 import db from "../../static.json";
 import { getUniqueValues } from "../../utils/common";
 import reducer from "./reducer";
+import { getData } from "../../utils/api";
+import Spinner from "../UI/Spinner";
 
 const initialState = {
   group: "Rooms",
   bookableIndex: 0,
   hasDetails: false,
-  bookables: db.bookables,
+  bookables: [],
+  isLoading: true,
+  error: false,
 };
 
 const BookablesList = () => {
   const { sessions, days } = db;
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { group, bookableIndex, hasDetails, bookables } = state;
+  const { group, bookableIndex, hasDetails, bookables, isLoading, error } =
+    state;
 
   const bookablesInGroup = bookables.filter((item) => item.group === group);
   const groups = getUniqueValues(bookables, "group");
@@ -34,6 +39,22 @@ const BookablesList = () => {
   const toggleDetail = () => {
     dispatch({ type: "TOGGLE_HAS_DETAILS" });
   };
+
+  useEffect(() => {
+    dispatch({ type: "FETCH_BOOKABLES_REQUEST" });
+
+    getData("http://localhost:3001/bookables")
+      .then((bookable) => {
+        dispatch({ type: "FETCH_BOOKABLES_SUCCESS", payload: bookable });
+      })
+      .catch((error) => {
+        dispatch({ type: "FETCH_BOOKABLES_ERROR", payload: error });
+      });
+  }, []);
+
+  if (error) return <p>{error.message}</p>;
+
+  if (isLoading) return <Spinner />;
 
   return (
     <Fragment>

@@ -1,19 +1,20 @@
-import { useState } from "react";
-import db from "../../static.json";
+import { useEffect, useState } from "react";
+import Spinner from "../UI/Spinner";
 
 export default function UserPicker() {
-  const { users } = db;
-  const [selectedUser, setSelectedUser] = useState(users[0]);
-  const handleChangeUser = (e) => {
-    const value = JSON.parse(e.target.value);
-    setSelectedUser(value);
-  };
+  const [users, setUsers] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
+  }, []);
+
+  if (!users) return <Spinner />;
   return (
-    <select onChange={handleChangeUser}>
+    <select>
       {users.map((u) => (
-        <option key={u.id} value={JSON.stringify(u)}>
-          {u.name}
-        </option>
+        <option key={u.id}>{u.name}</option>
       ))}
     </select>
   );
