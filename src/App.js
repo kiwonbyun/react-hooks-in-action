@@ -1,10 +1,15 @@
-import { Link, Route, Router, Routes } from 'react-router-dom';
-import './App.css';
-import { FaCalendarAlt, FaDoorOpen, FaUsers } from 'react-icons/fa';
+import { Link, Route, Router, Routes } from "react-router-dom";
+import "./App.css";
+import { FaCalendarAlt, FaDoorOpen, FaUsers } from "react-icons/fa";
+import { BrowserRouter } from "react-router-dom";
+import BookingsPage from "./components/Bookings/BookingsPage";
+import BookablesPage from "./components/Bookables/BookablesPage";
+import UsersPage from "./components/Users/UsersPage";
+import UserPicker from "./components/UserPicker/UserPicker";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App">
         <header>
           <nav>
@@ -38,7 +43,7 @@ function App() {
           <Route path="/users" element={<UsersPage />} />
         </Routes>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
