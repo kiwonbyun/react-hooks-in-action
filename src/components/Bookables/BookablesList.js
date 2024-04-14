@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useReducer, useState } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import db from "../../static.json";
 import { getUniqueValues } from "../../utils/common";
 import reducer from "./reducer";
@@ -19,6 +25,7 @@ const BookablesList = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { group, bookableIndex, hasDetails, bookables, isLoading, error } =
     state;
+  const timerRef = useRef(null);
 
   const bookablesInGroup = bookables.filter((item) => item.group === group);
   const groups = getUniqueValues(bookables, "group");
@@ -51,6 +58,18 @@ const BookablesList = () => {
         dispatch({ type: "FETCH_BOOKABLES_ERROR", payload: error });
       });
   }, []);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      dispatch({ type: "NEXT_BOOKABLE" });
+    }, 3000);
+
+    return () => stopInterval();
+  }, []);
+
+  function stopInterval() {
+    clearInterval(timerRef.current);
+  }
 
   if (error) return <p>{error.message}</p>;
 
@@ -98,6 +117,9 @@ const BookablesList = () => {
                   />
                   Show Details
                 </label>
+                <button className="btn" onClick={stopInterval}>
+                  Stop
+                </button>
               </span>
             </div>
 
