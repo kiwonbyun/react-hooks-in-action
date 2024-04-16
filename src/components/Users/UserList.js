@@ -12,7 +12,6 @@ export default function UsersList({ user, setUser }) {
     getData("http://localhost:3001/users")
       .then((data) => {
         setUsers(data);
-        setUser(data[0]);
         setIsLoading(false);
       })
       .catch((error) => {

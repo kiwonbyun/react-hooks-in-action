@@ -15,6 +15,5 @@ export const getBooking = (bookableId, startDate, endDate) => {
 
   const urlRoot = "http://localhost:3001/bookings";
   const query = `bookableId=${bookableId}&date_gte=${start}&date_lte=${end}`;
-
   return getData(`${urlRoot}?${query}`);
 };

@@ -7,7 +7,12 @@ import BookablesPage from "./components/Bookables/BookablesPage";
 import UsersPage from "./components/Users/UsersPage";
 import UserPicker from "./components/UserPicker/UserPicker";
 
+import UserContext from "./components/Users/UserContext";
+import { useState } from "react";
+
 function App() {
+  const [user, setUser] = useState();
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -35,13 +40,15 @@ function App() {
             </ul>
           </nav>
 
-          <UserPicker />
+          <UserPicker user={user} setUser={setUser} />
         </header>
-        <Routes>
-          <Route path="/bookings" element={<BookingsPage />} />
-          <Route path="/bookables" element={<BookablesPage />} />
-          <Route path="/users" element={<UsersPage />} />
-        </Routes>
+        <UserContext.Provider value={user}>
+          <Routes>
+            <Route path="/bookings" element={<BookingsPage />} />
+            <Route path="/bookables" element={<BookablesPage />} />
+            <Route path="/users" element={<UsersPage />} />
+          </Routes>
+        </UserContext.Provider>
       </div>
     </BrowserRouter>
   );
