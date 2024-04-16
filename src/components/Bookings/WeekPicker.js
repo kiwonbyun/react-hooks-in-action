@@ -1,9 +1,6 @@
-import React, { useReducer, useRef, useState } from "react";
-import weekReducer from "./weekReducer";
-import { getWeek } from "../../utils/date-wrangler";
+import React, { useState } from "react";
 
-const WeekPicker = ({ date }) => {
-  const [week, dispatch] = useReducer(weekReducer, date, getWeek);
+const WeekPicker = ({ dispatch }) => {
   const [dateText, setDateText] = useState("2024-03-30");
 
   const goToDate = () => {
@@ -36,9 +33,6 @@ const WeekPicker = ({ date }) => {
         <button className="btn" onClick={() => dispatch({ type: "NEXT_WEEK" })}>
           <span>Next</span>
         </button>
-      </p>
-      <p>
-        {week.start.toDateString()} - {week.end.toDateString()}
       </p>
     </div>
   );

@@ -1,31 +1,13 @@
-import React, { useEffect, useState } from "react";
-import WeekPicker from "./WeekPicker";
+import React, { useState } from "react";
+import BookablesList from "../Bookables/BookablesList";
+import Bookings from "./Bookings";
 
 const BookingsPage = () => {
-  const [size, setSize] = useState(getSize());
-
-  function getSize() {
-    return {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-  }
-
-  useEffect(() => {
-    function handleResize() {
-      setSize(getSize());
-    }
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
+  const [bookable, setBookable] = useState(null);
   return (
     <main className="bookings-page">
-      BookingsPage
-      {size.height}
-      <WeekPicker date={new Date()} />
+      <BookablesList bookable={bookable} setBookable={setBookable} />
+      <Bookings bookable={bookable} />
     </main>
   );
 };

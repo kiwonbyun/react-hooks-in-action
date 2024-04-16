@@ -14,3 +14,7 @@ export const getWeek = (forDate, daysOffset = 0) => {
     end: addDays(date, 6 - day),
   };
 };
+
+export const shortISO = (date) => {
+  return date.toISOString().split("T")[0];
+};

@@ -9,7 +9,6 @@ const BookablesList = ({ bookable, setBookable }) => {
   const [bookables, setBookables] = useState([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const nextButtonRef = useRef(null);
 
   const group = bookable?.group;
 
@@ -18,7 +17,6 @@ const BookablesList = ({ bookable, setBookable }) => {
 
   const changeBookable = (selectBookable) => {
     setBookable(selectBookable);
-    nextButtonRef.current.focus();
   };
 
   const changeGroup = (e) => {
@@ -36,7 +34,6 @@ const BookablesList = ({ bookable, setBookable }) => {
   };
 
   useEffect(() => {
-    console.log("re");
     getData("http://localhost:3001/bookables")
       .then((bookables) => {
         setBookable(bookables[0]);
@@ -75,12 +72,7 @@ const BookablesList = ({ bookable, setBookable }) => {
         ))}
       </ul>
       <p>
-        <button
-          className="btn"
-          autoFocus
-          onClick={nextBookable}
-          ref={nextButtonRef}
-        >
+        <button className="btn" autoFocus onClick={nextBookable}>
           <span>Next</span>
         </button>
       </p>
