@@ -14,6 +14,6 @@ export const getBooking = (bookableId, startDate, endDate) => {
   const end = shortISO(endDate);
 
   const urlRoot = "http://localhost:3001/bookings";
-  const query = `bookableId=${bookableId}&date_gte=${start}&date_lte=${end}`;
+  const query = `bookableId=${bookableId}`;
   return getData(`${urlRoot}?${query}`);
 };

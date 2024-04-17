@@ -15,6 +15,6 @@ export const getWeek = (forDate, daysOffset = 0) => {
   };
 };
 
-export const shortISO = (date) => {
+export function shortISO(date) {
   return date.toISOString().split("T")[0];
-};
+}

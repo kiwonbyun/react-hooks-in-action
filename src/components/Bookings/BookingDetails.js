@@ -4,7 +4,8 @@ import UserContext from "../Users/UserContext";
 
 const BookingDetails = ({ booking, bookable }) => {
   const user = useContext(UserContext);
-  const isBooker = booking && user && booking.bookerId === user.id;
+
+  const isBooker = booking && user && booking.bookerId === +user.id;
 
   return (
     <div className="booking-details">
