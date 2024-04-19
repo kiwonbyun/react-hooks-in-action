@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const UserContext = createContext();
-export const UserSetContext = createContext();
+const UserSetContext = createContext();
 export default UserContext;
 
 export function UserProvider({ children }) {
@@ -14,3 +14,13 @@ export function UserProvider({ children }) {
     </UserContext.Provider>
   );
 }
+
+export const useUser = () => {
+  const user = useContext(UserContext);
+  const setUser = useContext(UserSetContext);
+
+  if (!setUser) {
+    throw new Error("The UserProvider is required.");
+  }
+  return [user, setUser];
+};

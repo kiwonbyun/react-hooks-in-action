@@ -1,54 +1,30 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React from "react";
 import { getUniqueValues } from "../../utils/common";
 
-import { getData } from "../../utils/api";
-import Spinner from "../UI/Spinner";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const BookablesList = ({ bookable, setBookable }) => {
-  // const { group, bookableIndex, bookables, isLoading, error } = state;
-  const [bookables, setBookables] = useState([]);
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const BookablesList = ({ bookable, bookables = [], getUrl }) => {
+  const navigate = useNavigate();
 
   const group = bookable?.group;
 
   const bookablesInGroup = bookables.filter((item) => item.group === group);
   const groups = getUniqueValues(bookables, "group");
 
-  const changeBookable = (selectBookable) => {
-    setBookable(selectBookable);
-  };
-
   const changeGroup = (e) => {
     const bookablesInSelectedGroup = bookables.filter(
-      (item) => item.group === e.trget.value
+      (item) => item.group === e.target.value
     );
-    setBookable(bookablesInSelectedGroup[0]);
+    navigate(getUrl(bookablesInSelectedGroup[0].id));
   };
 
   const nextBookable = () => {
-    const i = bookablesInGroup.indexOf(bookable);
+    const i = bookablesInGroup.findIndex((b) => b.id === bookable.id);
     const nextIndex = (i + 1) % bookablesInGroup.length;
     const nextBookable = bookablesInGroup[nextIndex];
-    setBookable(nextBookable);
+    navigate(getUrl(nextBookable.id));
   };
-
-  useEffect(() => {
-    getData("http://localhost:3001/bookables")
-      .then((bookables) => {
-        setBookable(bookables[0]);
-        setBookables(bookables);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setIsLoading(false);
-      });
-  }, [setBookable]);
-
-  if (error) return <p>{error.message}</p>;
-
-  if (isLoading) return <Spinner />;
 
   return (
     <div>
@@ -65,9 +41,9 @@ const BookablesList = ({ bookable, setBookable }) => {
             key={item.id}
             className={item.id === bookable.id ? "selected" : null}
           >
-            <button className="btn" onClick={() => changeBookable(item)}>
+            <Link className="btn" to={getUrl(item.id)} replace={true}>
               {item.title}
-            </button>
+            </Link>
           </li>
         ))}
       </ul>

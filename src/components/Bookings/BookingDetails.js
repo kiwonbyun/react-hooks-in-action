@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import Booking from "./Booking";
-import UserContext from "../Users/UserContext";
+import { useUser } from "../Users/UserContext";
 
 const BookingDetails = ({ booking, bookable }) => {
-  const user = useContext(UserContext);
+  const [user] = useUser();
 
   const isBooker = booking && user && booking.bookerId === +user.id;
 

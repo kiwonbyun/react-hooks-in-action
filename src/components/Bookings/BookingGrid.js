@@ -1,33 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { getGrid, transformBookings } from "./GridBuilder";
-import { getBooking } from "../../utils/api";
+import React, { useEffect } from "react";
 import Spinner from "../UI/Spinner";
+import { useBookings, useGrid } from "./BooingHooks";
 
 const BookingGrid = ({ week, bookable, booking, setBooking }) => {
-  const [bookings, setBookings] = useState(null);
-  const [error, setError] = useState(false);
-  const { grid, sessions, dates } = useMemo(
-    () => (bookable ? getGrid(bookable, week.start) : {}),
-    [bookable, week.start]
+  const { bookings, error, status } = useBookings(
+    bookable?.id,
+    week.start,
+    week.end
   );
+  const { grid, dates, sessions } = useGrid(bookable, week.start);
 
   useEffect(() => {
-    if (bookable) {
-      let doUpdate = true;
-      setBooking(null);
-
-      getBooking(bookable.id, week.start, week.end)
-        .then((res) => {
-          console.log(res);
-          if (doUpdate) {
-            setBookings(transformBookings(res));
-          }
-        })
-        .catch(setError);
-
-      return () => (doUpdate = false);
-    }
-  }, [week, bookable, setBooking]);
+    setBooking(null);
+  }, [bookable, week.start, setBooking]);
 
   function cell(session, date) {
     const cellData = bookings?.[session]?.[date] || grid[session][date];
@@ -49,12 +34,16 @@ const BookingGrid = ({ week, bookable, booking, setBooking }) => {
 
   return (
     <>
-      {error && (
+      {status === "error" && (
         <p className="bookingsError">
           {`There was a problem loading the bookings data (${error})`}
         </p>
       )}
-      <table className={bookings ? "bookingsGrid active" : "bookingsGrid"}>
+      <table
+        className={
+          status === "success" ? "bookingsGrid active" : "bookingsGrid"
+        }
+      >
         <thead>
           <tr>
             <th>

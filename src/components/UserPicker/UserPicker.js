@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import Spinner from "../UI/Spinner";
-import UserContext, { UserSetContext } from "../Users/UserContext";
+import { useUser } from "../Users/UserContext";
+import useFetch from "../../utils/useFetch";
 
 export default function UserPicker() {
-  const user = useContext(UserContext);
-  const setUser = useContext(UserSetContext);
-  const [users, setUsers] = useState(null);
+  const [user, setUser] = useUser();
+  const { data: users = [], status } = useFetch("http://localhost:3001/users");
 
   const handleSelect = (e) => {
     const selectedId = parseInt(e.target.value, 10);
@@ -15,15 +15,12 @@ export default function UserPicker() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        setUser(data[0]);
-      });
-  }, []);
+    if (users) {
+      setUser(users[0]);
+    }
+  }, [users, setUser]);
 
-  if (!users) return <Spinner />;
+  if (status === "loading") return <Spinner />;
   return (
     <select onChange={handleSelect} value={user?.id}>
       {users.map((u) => (
