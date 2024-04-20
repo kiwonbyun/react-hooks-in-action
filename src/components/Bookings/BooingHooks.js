@@ -27,7 +27,7 @@ export function useGrid(bookable, startDate) {
 }
 
 export function useBookingParams() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const searchDate = searchParams.get("date");
   const bookableId = searchParams.get("bookableId");
@@ -36,8 +36,22 @@ export function useBookingParams() {
   const idInt = parseInt(bookableId, 10);
   const hasId = !isNaN(idInt);
 
+  const setBookingsDate = (date) => {
+    const parmas = {};
+    if (hasId) {
+      parmas.bookableId = idInt;
+    }
+    if (isDate(date)) {
+      parmas.date = date;
+    }
+    if (parmas.date || parmas.bookableId !== undefined) {
+      setSearchParams(parmas, { replace: true });
+    }
+  };
+
   return {
     date,
     bookableId: hasId ? idInt : undefined,
+    setBookingsDate,
   };
 }

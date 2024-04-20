@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
+import { useBookingParams } from "./BooingHooks";
+import { addDays, shortISO } from "../../utils/date-wrangler";
 
-const WeekPicker = ({ dispatch }) => {
-  const [dateText, setDateText] = useState("2024-03-30");
+const WeekPicker = () => {
+  const textboxRef = useRef(null);
+  const { date, setBookingsDate: goToDate } = useBookingParams();
 
-  const goToDate = () => {
-    dispatch({ type: "SET_DATE", payload: dateText });
+  const dates = {
+    prev: shortISO(addDays(date, -7)),
+    next: shortISO(addDays(date, 7)),
+    today: shortISO(new Date()),
   };
 
   return (
     <div>
       <p className="date-picker">
-        <button className="btn" onClick={() => dispatch({ type: "PREV_WEEK" })}>
+        <button className="btn" onClick={() => goToDate(dates.prev)}>
           <span>Prev</span>
         </button>
 
-        <button className="btn" onClick={() => dispatch({ type: "TODAY" })}>
+        <button className="btn" onClick={() => goToDate(dates.today)}>
           <span>Today</span>
         </button>
 
@@ -22,15 +27,18 @@ const WeekPicker = ({ dispatch }) => {
           <input
             type="text"
             placeholder="e.g. 2024-01-20"
-            value={dateText}
-            onChange={(e) => setDateText(e.target.value)}
+            ref={textboxRef}
+            defaultValue={dates.today}
           />
-          <button className="go btn" onClick={goToDate}>
+          <button
+            className="go btn"
+            onClick={() => goToDate(textboxRef.current.value)}
+          >
             <span>Go</span>
           </button>
         </span>
 
-        <button className="btn" onClick={() => dispatch({ type: "NEXT_WEEK" })}>
+        <button className="btn" onClick={() => goToDate(dates.next)}>
           <span>Next</span>
         </button>
       </p>
