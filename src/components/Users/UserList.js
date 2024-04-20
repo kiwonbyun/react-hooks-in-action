@@ -1,17 +1,14 @@
-import Spinner from "../UI/Spinner";
 import { useQuery } from "react-query";
 import { getData } from "../../utils/api";
 
 export default function UsersList({ user, setUser }) {
-  const {
-    data: users = [],
-    status,
-    error,
-  } = useQuery(["users"], () => getData("http://localhost:3001/users"));
-
-  if (status === "loading") return <Spinner />;
-
-  if (status === "error") return <p>{error.message}</p>;
+  const { data: users = [] } = useQuery(
+    ["users"],
+    () => getData("http://localhost:3001/users"),
+    {
+      suspense: true,
+    }
+  );
 
   return (
     <ul className="users items-list-nav">

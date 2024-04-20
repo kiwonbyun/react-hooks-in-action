@@ -1,31 +1,23 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import BookablesList from "./BookablesList";
 import BookableDetails from "./BookableDetails";
 import { useParams } from "react-router-dom";
-import useFetch from "../../utils/useFetch";
-import Spinner from "../UI/Spinner";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getData } from "../../utils/api";
 
 const BookablesView = () => {
   const { id } = useParams();
-  const {
-    data: bookables = [],
-    status,
-    error,
-  } = useQuery("bookables", () => getData("http://localhost:3001/bookables"));
+  const { data: bookables = [] } = useQuery(
+    "bookables",
+    () => getData("http://localhost:3001/bookables"),
+    {
+      suspense: true,
+    }
+  );
 
   const bookable =
     bookables.find((b) => +b.id === parseInt(id, 10)) || bookables[0];
-
-  if (status === "error") {
-    return <p>{error.message}</p>;
-  }
-
-  if (status === "loading") {
-    return <Spinner />;
-  }
 
   return (
     <main className="bookables-page">

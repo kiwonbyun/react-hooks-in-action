@@ -9,11 +9,13 @@ import { useQuery } from "react-query";
 import { getData } from "../../utils/api";
 
 const BookingsPage = () => {
-  const {
-    data: bookables = [],
-    error,
-    status,
-  } = useQuery("bookables", () => getData("http://localhost:3001/bookables"));
+  const { data: bookables = [] } = useQuery(
+    "bookables",
+    () => getData("http://localhost:3001/bookables"),
+    {
+      suspense: true,
+    }
+  );
   const { date, bookableId } = useBookingParams();
 
   const bookable = bookables.find((b) => +b.id === bookableId) || bookables[0];
@@ -22,13 +24,6 @@ const BookingsPage = () => {
     const root = `/bookings?bookableId=${id}`;
     return date ? `${root}&date=${shortISO(date)}` : root;
   };
-
-  if (status === "error") {
-    return <p>{error.message}</p>;
-  }
-  if (status === "loading") {
-    return <Spinner />;
-  }
 
   return (
     <main className="bookings-page">
