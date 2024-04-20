@@ -2,13 +2,19 @@ import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from "react-icons/fa";
 import { BrowserRouter } from "react-router-dom";
-import BookingsPage from "./components/Bookings/BookingsPage";
-import BookablesPage from "./components/Bookables/BookablesPage";
-import UsersPage from "./components/Users/UsersPage";
 import UserPicker from "./components/UserPicker/UserPicker";
 
 import { UserProvider } from "./components/Users/UserContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Suspense, lazy } from "react";
+import PageSpinner from "./components/UI/PageSpinner";
+import ErrorBoundary from "./components/UI/ErrorBoundary";
+
+const BookingsPage = lazy(() => import("./components/Bookings/BookingsPage"));
+const BookablesPage = lazy(() =>
+  import("./components/Bookables/BookablesPage")
+);
+const UsersPage = lazy(() => import("./components/Users/UsersPage"));
 
 const queryClient = new QueryClient();
 
@@ -44,12 +50,22 @@ function App() {
 
               <UserPicker />
             </header>
-
-            <Routes>
-              <Route path="/bookings" element={<BookingsPage />} />
-              <Route path="/bookables/*" element={<BookablesPage />} />
-              <Route path="/users" element={<UsersPage />} />
-            </Routes>
+            <ErrorBoundary
+              fallback={
+                <>
+                  <h1>Something went wrong!</h1>
+                  <p>Try reloading the page.</p>
+                </>
+              }
+            >
+              <Suspense fallback={<PageSpinner />}>
+                <Routes>
+                  <Route path="/bookings" element={<BookingsPage />} />
+                  <Route path="/bookables/*" element={<BookablesPage />} />
+                  <Route path="/users" element={<UsersPage />} />
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </BrowserRouter>
       </UserProvider>

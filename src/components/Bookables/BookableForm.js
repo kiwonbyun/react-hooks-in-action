@@ -15,6 +15,8 @@ export default function BookableForm({
   const daysArray = db.days;
   const sessionsArray = db.sessions;
 
+  throw new Error("asd");
+
   return (
     <main className="bookables-form">
       <div className="item item-form">
