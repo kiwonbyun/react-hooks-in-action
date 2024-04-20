@@ -5,13 +5,15 @@ import useFetch from "../../utils/useFetch";
 import { useBookingParams } from "./BooingHooks";
 import { shortISO } from "../../utils/date-wrangler";
 import Spinner from "../UI/Spinner";
+import { useQuery } from "react-query";
+import { getData } from "../../utils/api";
 
 const BookingsPage = () => {
   const {
     data: bookables = [],
     error,
     status,
-  } = useFetch("http://localhost:3001/bookables");
+  } = useQuery("bookables", () => getData("http://localhost:3001/bookables"));
   const { date, bookableId } = useBookingParams();
 
   const bookable = bookables.find((b) => +b.id === bookableId) || bookables[0];

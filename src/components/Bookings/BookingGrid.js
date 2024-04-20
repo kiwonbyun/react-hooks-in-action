@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Spinner from "../UI/Spinner";
 import { useBookings, useGrid } from "./BooingHooks";
 
@@ -9,10 +9,6 @@ const BookingGrid = ({ week, bookable, booking, setBooking }) => {
     week.end
   );
   const { grid, dates, sessions } = useGrid(bookable, week.start);
-
-  useEffect(() => {
-    setBooking(null);
-  }, [bookable, week.start, setBooking]);
 
   function cell(session, date) {
     const cellData = bookings?.[session]?.[date] || grid[session][date];

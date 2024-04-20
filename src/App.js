@@ -1,4 +1,4 @@
-import { Link, Route, Router, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from "react-icons/fa";
 import { BrowserRouter } from "react-router-dom";
@@ -8,47 +8,52 @@ import UsersPage from "./components/Users/UsersPage";
 import UserPicker from "./components/UserPicker/UserPicker";
 
 import { UserProvider } from "./components/Users/UserContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <UserProvider>
-      <BrowserRouter>
-        <div className="App">
-          <header>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/bookings" className="btn btn-header">
-                    <FaCalendarAlt />
-                    <span>Booking</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/bookables" className="btn btn-header">
-                    <FaDoorOpen />
-                    <span>Bookables</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/users" className="btn btn-header">
-                    <FaUsers />
-                    <span>Users</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
+    <QueryClientProvider client={queryClient}>
+      <UserProvider>
+        <BrowserRouter>
+          <div className="App">
+            <header>
+              <nav>
+                <ul>
+                  <li>
+                    <Link to="/bookings" className="btn btn-header">
+                      <FaCalendarAlt />
+                      <span>Booking</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/bookables" className="btn btn-header">
+                      <FaDoorOpen />
+                      <span>Bookables</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/users" className="btn btn-header">
+                      <FaUsers />
+                      <span>Users</span>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
 
-            <UserPicker />
-          </header>
+              <UserPicker />
+            </header>
 
-          <Routes>
-            <Route path="/bookings" element={<BookingsPage />} />
-            <Route path="/bookables/*" element={<BookablesPage />} />
-            <Route path="/users" element={<UsersPage />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
-    </UserProvider>
+            <Routes>
+              <Route path="/bookings" element={<BookingsPage />} />
+              <Route path="/bookables/*" element={<BookablesPage />} />
+              <Route path="/users" element={<UsersPage />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </UserProvider>
+    </QueryClientProvider>
   );
 }
 

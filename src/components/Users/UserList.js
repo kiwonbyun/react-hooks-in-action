@@ -1,12 +1,13 @@
 import Spinner from "../UI/Spinner";
-import useFetch from "../../utils/useFetch";
+import { useQuery } from "react-query";
+import { getData } from "../../utils/api";
 
 export default function UsersList({ user, setUser }) {
   const {
     data: users = [],
     status,
     error,
-  } = useFetch("http://localhost:3001/users");
+  } = useQuery(["users"], () => getData("http://localhost:3001/users"));
 
   if (status === "loading") return <Spinner />;
 

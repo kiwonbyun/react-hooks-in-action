@@ -1,13 +1,11 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import WeekPicker from "./WeekPicker";
-import weekReducer from "./weekReducer";
 import { getWeek, shortISO } from "../../utils/date-wrangler";
 import BookingGrid from "./BookingGrid";
 import BookingDetails from "./BookingDetails";
 import { useBookingParams, useBookings } from "./BooingHooks";
 
 const Bookings = ({ bookable }) => {
-  // const [week, dispatch] = useReducer(weekReducer, new Date(), getWeek);
   const [booking, setBooking] = useState(null);
   const { date } = useBookingParams();
   const week = getWeek(date);
