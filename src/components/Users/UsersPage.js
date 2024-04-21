@@ -1,4 +1,9 @@
-import React, { Suspense, useState } from "react";
+import React, {
+  Suspense,
+  useDeferredValue,
+  useState,
+  useTransition,
+} from "react";
 import UsersList from "./UserList";
 import UserDetails from "./UserDetails";
 import { useUser } from "../Users/UserContext";
@@ -7,14 +12,13 @@ import { getData } from "../../utils/api";
 import PageSpinner from "../UI/PageSpinner";
 
 const UsersPage = () => {
-  // const [user, setUser] = useState(null);
-  // const [loggedInUser] = useUser();
-
-  // const currentUser = user || loggedInUser;
   const [loggedInUser] = useUser();
   const [selectedUser, setSelectedUser] = useState(null);
   const user = selectedUser || loggedInUser;
   const queryClient = useQueryClient();
+
+  const deferredUser = useDeferredValue(user) || user;
+  const isPending = deferredUser !== user;
 
   function switchUser(nextUser) {
     setSelectedUser(nextUser);
@@ -36,10 +40,10 @@ const UsersPage = () => {
 
   return user ? (
     <main className="users-page">
-      <UsersList user={user} setUser={switchUser} />
+      <UsersList user={user} setUser={switchUser} isPending={isPending} />
 
       <Suspense fallback={<PageSpinner />}>
-        <UserDetails user={user} />
+        <UserDetails userID={deferredUser.id} isPending={isPending} />
       </Suspense>
     </main>
   ) : (
